@@ -1,0 +1,40 @@
+expandFolder(folder) ::= <<
+^folder.Folders:{f |
+	^expandFolder(f)^
+}^
+^folder.Elements:{c |
+	^if(c.Source)^
+		dataRelations.push({id:"^c.Id^", type:"^c.Class.SimpleName^", name:decodeURL("^c.Name;format="url-encode"^"), mysource:"^c.Source.Id^", mytarget:"^c.Target.Id^"\});
+		^c.Properties:{p |
+			dataProperties.push({id:"^c.Id^", key:decodeURL("^p.Key;format="url-encode"^"), value:decodeURL("^p.Value;format="url-encode"^")\});
+		}^
+	^else^
+		dataElements.push({id:"^c.Id^", type:"^c.Class.SimpleName^", name:decodeURL("^c.Name;format="url-encode"^")\});
+		^c.Properties:{p |
+			dataProperties.push({id:"^c.Id^", key:decodeURL("^p.Key;format="url-encode"^"), value:decodeURL("^p.Value;format="url-encode"^")\});
+		}^
+	^endif^
+	
+	
+}^
+
+>>
+
+modelreport(model, strategyFolder, businessFolder, applicationFolder, technologyFolder, motivationFolder, implementationFolder, otherFolder, relationsFolder, viewsFolder) ::= << 
+	function decodeURL(s) {
+		return decodeURIComponent(s.replace(/\+/g, "%20"));
+	}
+	var dataElements = [ ];	  
+  	var dataProperties = [ ];
+ 	var dataRelations = [ ];
+	
+	^expandFolder(model)^
+	
+    alasql('CREATE TABLE Elements');
+    alasql('CREATE TABLE Properties');
+    alasql('CREATE TABLE Relations');
+
+    alasql.tables.Elements.data = dataElements;
+    alasql.tables.Properties.data = dataProperties;
+    alasql.tables.Relations.data = dataRelations;
+>>
