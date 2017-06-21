@@ -13,16 +13,16 @@ Be sure you have the following requirements installed in order to run This versi
 - [bower](https://bower.io/#installing-bower)
 Instructions:
  
-Clone RAW from the command line:
+Clone RAW from the command line:\
 $ git clone https://github.com/Kechmade/DataViz-Plugin
 
 browse to RAW root folder: \
 $ cd DataViz-plugin
 
-install client-side dependencies:
+install client-side dependencies:\
 $ bower install
 
-Run RAW from your local web server. For example, you can run Python's built-in server:
+Run RAW from your local web server. For example, you can run Python's built-in server:\
 $ python -m SimpleHTTPServer 4000
 or for Python 3+
 $ python -m http.server 4000
@@ -36,8 +36,8 @@ In order to use dynamic data extraction from  your model ( using alaSQL library)
 3. In the subdirectory (/Archi.app/plugins/com.archimatetool.reports_4.0.2.201706161020/templates/st/ ) of Archi, change the file modelreport.stg with the file located on AddTO folder in your DataViz-Plygin directory.
 4. Launch Archi and select a model. 
 5. In menu entries "File > Report > HTML" [This will run an html page]
-6. from your terminal : 
-$ cd ~/DataViz-plugin 
+6. from your terminal : \
+$ cd ~/DataViz-plugin \
 $ python -m SimpleHTTPServer 9090
 
 7. Once this is running, go to   http://localhost:9090/raw.html
