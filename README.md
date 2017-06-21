@@ -16,7 +16,7 @@ Instructions:
 Clone RAW from the command line:
 $ git clone https://github.com/Kechmade/DataViz-Plugin
 
-browse to RAW root folder:
+browse to RAW root folder: \
 $ cd DataViz-plugin
 
 install client-side dependencies:
