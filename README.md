@@ -30,8 +30,8 @@ Be sure you have the following requirements installed in order to run This versi
 # Run Locally on your Machine independantly from Archi.
 
 You will only need the html subdirectory. \
-1 - Rename raw.html to index.html
-2 - Launch WebServer.exe and note the Port where your server is running. 
+1 - Rename raw.html to index.html \
+2 - Launch WebServer.exe and note the Port where your server is running. \
 3 - Go to localhost from your web browser. 
 
 Or from terminal: \
