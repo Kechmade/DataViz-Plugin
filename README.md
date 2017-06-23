@@ -4,7 +4,7 @@ This project is an extention to [Archi](https://github.com/archimatetool/archi) 
 
 ## Instructions
 
-# Run Locally on your Machine from Archi.
+### Run Locally on your Machine from Archi.
 
 In order to use dynamic data extraction directly from your model ( using alaSQL library).
 
@@ -27,7 +27,7 @@ Run Locally on your Machine independently from ARCHI.
 
 Be sure you have the following requirements installed in order to run This version of Raw DataViz-Plugin locally in your machine :
 
-# Run Locally on your Machine independantly from Archi.
+### Run Locally on your Machine independantly from Archi.
 
 You will only need the html subdirectory. \
 1 - Rename raw.html to index.html \
