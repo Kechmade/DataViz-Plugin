@@ -23,8 +23,8 @@ install client-side dependencies:\
 $ bower install
 
 Run RAW from your local web server. For example, you can run Python's built-in server:\
-$ python -m SimpleHTTPServer 4000\
-or for Python 3+\
+$ python -m SimpleHTTPServer 4000
+or for Python 3+
 $ python -m http.server 4000
 
 Once this is running, go to http://localhost:4000/
