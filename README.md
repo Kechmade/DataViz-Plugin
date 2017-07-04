@@ -1,6 +1,6 @@
 # RawGraphs as a data visualization Plug-in for Archi.
 ## What is it ? 
-This project is an extention to [Archi](https://github.com/archimatetool/archi) that allows generating dynamic plots and information graphics. It is designed for architects using the modelling technique Archimate with Archi. The Plug-in extracts automatically data from the set of concepts and relationships from the model [using the open source JavaScript SQL database [alaSQL](http://alasql.org/)] It offers different algorithms of data visualization to address the concerns of different stakeholders.
+This project is an extention to [Archi](https://github.com/archimatetool/archi) that allows generating dynamic plots and information graphics. It is designed for architects using the modelling technique Archimate with Archi. The Plug-in extracts automatically data from the set of concepts and relationships from the model [using the open source JavaScript SQL database [alaSQL](http://alasql.org/)] and offers different algorithms of data visualization to address the concerns of different stakeholders.
 
 ## Instructions
 
