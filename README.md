@@ -23,10 +23,6 @@ In menu entries "File > Report > HTML" [This will ask you to create a repository
 3 - Go to localhost/raw.html from your web browser. 
 
 
-Run Locally on your Machine independently from ARCHI.
-
-Be sure you have the following requirements installed in order to run This version of Raw DataViz-Plugin locally in your machine :
-
 ### Run Locally on your Machine independantly from Archi.
 
 You will only need the html subdirectory. \
