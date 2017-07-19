@@ -44,9 +44,9 @@
      })
 
     var chart = raw.chart()
-        .title('Test2')
+        .title('Force directed graph')
         .description(
-            "Nested circles allow to represent hierarchies and compare values. This visualization is particularly effective to show the proportion between elements through their areas and their position inside a hierarchical structure. <br/>Based on <a href='http://bl.ocks.org/mbostock/7882658'>http://bl.ocks.org/mbostock/7882658</a>")
+            "Cartographie applicative")
         .thumbnail("imgs/clusterForce.png")
         .category('Hierarchy (weighted)')
         .model(nodes)
@@ -67,13 +67,13 @@
 
     chart.draw(function (selection, data){
 
-    d3.layout.pack()
-            .sort(null)
-            .size([+width(), +height()])
-            .padding(d3.max([2,10]))
-            .children(function (d) { return d.values; })
-            .value(function (d) { return +d.size; })
-            .nodes(data);
+//     d3.layout.pack()
+//             .sort(null)
+//             .size([+width(), +height()])
+//             .padding(d3.max([2,10]))
+//             .children(function (d) { return d.values; })
+//             .value(function (d) { return +d.size; })
+//             .nodes(data);
 
     var force = d3.layout.force()
         .nodes(data)
@@ -91,12 +91,12 @@
         .attr("height", height);
 
 
-//     var link = g.selectAll("line")
-//         .data(data.filter(function (d){ return d.type == "link"; }))
-//         .enter().append("line")
-//             .style("stroke-width", "2")
-//             .style("stroke", "grey")
-//             .call(force.drag); 
+    var link = g.selectAll("line")
+        .data(data.filter(function (d){ return d.type == "link"; }))
+        .enter().append("line")
+            .style("stroke-width", "0.5")
+            .style("stroke", "grey")
+            .call(force.drag); 
     
     var nodeSource = g.selectAll("circle")
         .data(data.filter(function (d){ return d.type == "sourceNode"; }))
@@ -116,17 +116,17 @@
     function tick(e) {
         nodeSource
           .attr("cx", function(d) { return d.x = Math.max(radius(), Math.min(width() - radius(), d.x)); })
-          .attr("cy", function(d) { return d.y = Math.max(radius(), Math.min(height() - radius(), d.y)); });
+          .attr("cy", function(d) { return d.y = Math.max(radius(), Math.min(height()-10 - radius(), d.y)); });
        
         nodeTarget
           .attr("x", function(d) { return d.x = Math.max(radius(), Math.min(width() - radius(), d.x)); })
-          .attr("y", function(d) { return d.y = Math.max(radius(), Math.min(height() - radius(), d.y)); });
-          
-    //     link
-//           .attr("x1", function(d) { return d.sourceNode.x; })
-//           .attr("y1", function(d) { return d.sourceNode.y; })	
-//           .attr("x2", function(d) { return d.targetNode.x; })
-//           .attr("y2", function(d) { return d.targetNode.x; });
+          .attr("y", function(d) { return d.y = Math.max(radius(), Math.min(height()-10 - radius(), d.y)); });
+  	        
+    	link
+          .attr("x1", function(d) { return d3.selectAll('circle').filter(function (k) { return d.source === k.sourceNode; }).attr('cx');})
+          .attr("y1", function(d) { return d3.selectAll('circle').filter(function (k) { return d.source === k.sourceNode; }).attr('cy'); })	
+          .attr("x2", function(d) { return d3.selectAll('rect').filter(function (k) { return d.target === k.targetNode; }).attr('x'); })
+          .attr("y2", function(d) { return d3.selectAll('rect').filter(function (k) { return d.target === k.targetNode; }).attr('y'); });
 		
 		     chart.dispatchStartDrawing()
 
