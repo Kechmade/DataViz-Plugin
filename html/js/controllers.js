@@ -189,7 +189,10 @@ angular.module('raw.controllers', [])
     });
 
     $scope.samples = [
-                      { title : 'POS ', type : 'Query', url : 'data/POS.sql'},
+                      { title : 'POS ', type : 'Query', url : 'data/POS.sql'},                          
+      		 		  { title : 'Test RoadMap', type : 'Distributions', url : 'data/roadmap.csv'},
+       				  { title : 'Test Cartographie Applicative', type : 'Distributions', url : 'data/relations.csv'},
+         			  { title : 'Test Scatter Plot', type : 'Distributions', url : 'data/multivariate.csv'}
                              				 ]
 
     $scope.selectSample = function(sample) {
