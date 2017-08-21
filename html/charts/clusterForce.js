@@ -17,7 +17,10 @@
 		.title("Source Group")
 		
 	var targetGroup = nodes.dimension()
-		.title("Target Group")	
+		.title("Target Group")
+		
+	var color = nodes.dimension()
+        .title("Color")	
 		
 
 
@@ -27,7 +30,8 @@
     		return {   
     				node : source(d),
     				group: sourceGroup(d),
-    				type  : 'node'
+    				type  : 'node',
+    				color: color(d),
     				} ; 		
     	});
     	
@@ -35,7 +39,8 @@
     		return {   
     				node : target(d),
     				group: targetGroup(d), 
-    				type  : 'node'
+    				type  : 'node',
+    				color: color(d)
     				} ; 	
     	});
     	
@@ -85,8 +90,8 @@
         	.title("Radius")
         	.defaultValue(6)
 		
-		var colors = chart.color()
-		.title("Color scale")	
+	 var colors = chart.color()
+         .title("Color scale")	
 
     	chart.draw(function (selection, data){
 		
@@ -105,20 +110,20 @@
 			.attr("width", width)
 			.attr("height", height);
 	
-		colors.domain(data, function (d){ return d.group; });
-		
+    colors.domain(data.filter(function (d){ return d.type == "node"; }), function (d){ return d.color; });
+
 		var link = g.selectAll("line")
 			.data(data.filter(function (d){ return d.type == "link"; }))
 			.enter().append("line")
 				.style("stroke-width", function(d) { return d.interest ;})  
-				.style("stroke", "grey")
+				.style("stroke", function(d) { return d.color ? colors()(d.color) : colors()(null); })
 				.call(force.drag); 
 	
 		var node = g.selectAll("circle")
 			.data(data.filter(function (d){ return d.type == "node"; }))
 			.enter().append("circle")
 				.attr("r", 8)
-				.style("fill",  function (d){ return colors()(d.group); })
+				.style("fill",  function(d) { return d.color ? colors()(d.color) : colors()(null); })
 				.call(force.drag);	
 					
 					
@@ -142,13 +147,13 @@
   		nodes.forEach(function(node) {
     		var center = nodes[node.group];
     		node.x += (center.x - node.x) * k;
-    		node.y += (center.y - node.y) * k;  
+    		node.y += (center.y - node.y )* k;  
    		 });
 
-	    var q = d3.geom.quadtree(data),
+	    var q = d3.geom.quadtree(nodes),
 	    i = 0,
-	    n = data.length;
-	    while (++i < n) q.visit(collide(data[i]));
+	    n = nodes.length;
+	    while (++i < n) q.visit(collide(nodes[i]));
                
         node
           .attr("cx", function(d) { return d.x = Math.max(radius(), Math.min(width() - radius(), d.x)); })
