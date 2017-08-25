@@ -3,26 +3,25 @@
     var nodes = raw.model();
 
 	var source = nodes.dimension()
-		.title("Source")
+		.title("Node source")
 		.required(1);
 		
 	var target = nodes.dimension()
-		.title("Target")
+		.title("Node target")
 		.required(1);
 		
 	var linkWidth = nodes.dimension()
-		.title("link Width")
+		.title("Link width")
 
 	var sourceGroup = nodes.dimension()
-		.title("Source Group")
+		.title("Source group")
 		
 	var targetGroup = nodes.dimension()
-		.title("Target Group")
-		
-	var color = nodes.dimension()
-        .title("Color")	
-		
-
+		.title("Target group")
+				
+	var linkColor = nodes.dimension()
+        .title("Link colors")
+        	
 
     nodes.map(function (data){
 	
@@ -31,7 +30,7 @@
     				node : source(d),
     				group: sourceGroup(d),
     				type  : 'node',
-    				color: color(d),
+    				
     				} ; 		
     	});
     	
@@ -40,7 +39,6 @@
     				node : target(d),
     				group: targetGroup(d), 
     				type  : 'node',
-    				color: color(d)
     				} ; 	
     	});
     	
@@ -49,7 +47,8 @@
     				type : 'link',
     				interest: linkWidth(d),
     				source : source(d),
-    				target : target(d),		
+    				target : target(d),
+    				linkColor: linkColor(d),		
 			}			
 		});
 		
@@ -69,31 +68,41 @@
    	    
      })
 
- 	    var chart = raw.chart()
-        	.title('Cartographie applicative')
-        	.description(
-            "Cartographie applicative")
-        	.thumbnail("imgs/clusterForce.png")
-        	.category('Hierarchy (weighted)')
-        	.model(nodes)
+ 	var chart = raw.chart()
+    	.title('Force graph for application network visualisation')
+        .description("Mapping application network")
+    	.thumbnail("imgs/clusterForce.png")
+    	.category('Graph')
+    	.model(nodes)
 
-    	var width = chart.number()
-        	.title("Width")
-        	.defaultValue(1000)
-        	.fitToWidth(true)
+    var width = chart.number()
+        .title("Width")
+        .defaultValue(1000)
+        .fitToWidth(true)
 
-    	var height = chart.number()
-        	.title("Height")
-        	.defaultValue(500)
+    var height = chart.number()
+        .title("Height")
+        .defaultValue(500)
         
-    	var radius = chart.number()
-        	.title("Radius")
-        	.defaultValue(6)
-		
-	 var colors = chart.color()
-         .title("Color scale")	
+    var radius = chart.number()
+        .title("Radius")
+        .defaultValue(6)
 
-    	chart.draw(function (selection, data){
+    var padding = chart.number()
+        .title("Node padding")
+        .defaultValue(5)
+        	
+    var clusterPadding = chart.number()
+        .title("cluster Padding")
+        .defaultValue(40)	
+    
+    var linkColors = chart.color()
+         .title("Links Color scale")	
+            
+    var colors = chart.color()
+    	 .title("node Color scale")		
+
+    chart.draw(function (selection, data){
 		
 		var force = d3.layout.force()
 			.nodes(data)
@@ -110,24 +119,25 @@
 			.attr("width", width)
 			.attr("height", height);
 	
-    colors.domain(data.filter(function (d){ return d.type == "node"; }), function (d){ return d.color; });
+  
+  	colors.domain(data, function (d){ return d.group; });
+      
+    linkColors.domain(data.filter(function (d){ return d.type == "link"; }), function (d){ return d.linkColor; });
 
 		var link = g.selectAll("line")
 			.data(data.filter(function (d){ return d.type == "link"; }))
 			.enter().append("line")
 				.style("stroke-width", function(d) { return d.interest ;})  
-				.style("stroke", function(d) { return d.color ? colors()(d.color) : colors()(null); })
+				.style("stroke", function(d) { return d.linkColor ? linkColors()(d.linkColor) : linkColors()(null); })
 				.call(force.drag); 
 	
 		var node = g.selectAll("circle")
 			.data(data.filter(function (d){ return d.type == "node"; }))
 			.enter().append("circle")
 				.attr("r", 8)
-				.style("fill",  function(d) { return d.color ? colors()(d.color) : colors()(null); })
+				.style("fill", function (d){ return colors()(d.group); })
 				.call(force.drag);	
-					
-					
-		
+												
 		var text = g.selectAll("text")
 			.data(data.filter(function (d){ return d.type == "node"; }))
 			.enter().append("text")
@@ -149,17 +159,13 @@
     		node.x += (center.x - node.x) * k;
     		node.y += (center.y - node.y )* k;  
    		 });
-
-	    var q = d3.geom.quadtree(nodes),
-	    i = 0,
-	    n = nodes.length;
-	    while (++i < n) q.visit(collide(nodes[i]));
-               
+             
         node
           .attr("cx", function(d) { return d.x = Math.max(radius(), Math.min(width() - radius(), d.x)); })
           .attr("cy", function(d) { return d.y = Math.max(radius(), Math.min(height()-10 - radius(), d.y)); });
         
     	link
+
           .attr("x1", function(d) { return d3.selectAll('circle').filter(function (k) { return d.source === k.node; }).attr('cx');})
           .attr("y1", function(d) { return d3.selectAll('circle').filter(function (k) { return d.source === k.node; }).attr('cy'); })	
           .attr("x2", function(d) { return d3.selectAll('circle').filter(function (k) { return d.target === k.node; }).attr('cx'); })
@@ -171,30 +177,9 @@
              	
 		     chart.dispatchStartDrawing()
     }
+
+
     
-		function collide(node) {
-  			var r = node.radius + 16,
-      		nx1 = node.x - r,
-     	 	nx2 = node.x + r,
-      		ny1 = node.y - r,
-      		ny2 = node.y + r;
- 		 	return function(quad, x1, y1, x2, y2) {
-    			if (quad.point && (quad.point !== node)) {
-      				var x = node.x - quad.point.x,
-          			y = node.y - quad.point.y,
-          			l = Math.sqrt(x * x + y * y),
-          			r = node.radius + quad.point.radius;
-      			if (l < r) {
-        			l = (l - r) / l * .5;
-        			node.x -= x *= l;
-        			node.y -= y *= l;
-        			quad.point.x += x;
-        			quad.point.y += y;
-      			}
-    		}
-    		return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-  		};
-}
   })
   
 })();
